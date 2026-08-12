@@ -5,7 +5,9 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Header, HTTPException, Request
+from pydantic import BaseModel, Field
+from dashboard.access import decide, list_devices, list_pending, rename, revoke, revoke_all
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -23,6 +25,12 @@ logger = logging.getLogger("pi-dashboard")
 app = FastAPI(title="PI-4 Control", docs_url=None, redoc_url=None)
 app.add_middleware(LocalNetworkMiddleware)
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+
+class DeviceName(BaseModel):
+    name: str = Field(min_length=1, max_length=80)
+
+def same_origin(value: str | None) -> None:
+    if value != "same-origin": raise HTTPException(403, "Same-origin request required")
 
 
 @app.exception_handler(RequestValidationError)
@@ -59,6 +67,27 @@ async def services_status() -> dict[str, object]:
 @app.get("/api/storage")
 async def storage_status() -> dict[str, object]:
     return get_storage_status()
+
+@app.get("/api/access")
+async def access_status() -> dict[str, object]: return {"pending": list_pending(), "trusted": list_devices()}
+
+@app.post("/api/access/pending/{request_id}/approve")
+async def approve(request_id: str, marker: str | None = Header(None, alias="X-PI-Dashboard")): same_origin(marker); return {"success": decide(request_id,"approved")}
+
+@app.post("/api/access/pending/{request_id}/deny")
+async def deny(request_id: str, marker: str | None = Header(None, alias="X-PI-Dashboard")): same_origin(marker); return {"success": decide(request_id,"denied")}
+
+@app.put("/api/access/devices/{device_id}")
+async def rename_device(device_id: str, body: DeviceName, marker: str | None = Header(None, alias="X-PI-Dashboard")): same_origin(marker); return {"success": rename(device_id,body.name)}
+
+@app.delete("/api/access/devices/{device_id}")
+async def revoke_device(device_id: str, marker: str | None = Header(None, alias="X-PI-Dashboard")): same_origin(marker); return {"success": revoke(device_id)}
+
+@app.delete("/api/access/devices")
+async def revoke_every_device(confirm: str = "", marker: str | None = Header(None, alias="X-PI-Dashboard")):
+    same_origin(marker)
+    if confirm != "REVOKE ALL": raise HTTPException(400,"Confirmation required")
+    return {"revoked": revoke_all()}
 
 
 @app.post("/api/services/{service_id}/restart")

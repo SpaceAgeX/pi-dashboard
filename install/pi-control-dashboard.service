@@ -15,6 +15,7 @@ PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
 ReadOnlyPaths=/home/x/pi-dashboard
+ReadWritePaths=/var/lib/aryehlab
 
 [Install]
 WantedBy=multi-user.target

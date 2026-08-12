@@ -1,0 +1,2 @@
+d /var/lib/aryehlab 2770 x aryehlab -
+f /var/lib/aryehlab/auth.db 0660 x aryehlab -

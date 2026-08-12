@@ -2,7 +2,7 @@
 
 A private, dark-mode management dashboard for a Raspberry Pi 4. Version 1 provides detailed system, network, storage, and service monitoring; fixed systemd service restarts; and guarded reboot/shutdown controls. It uses FastAPI and plain browser assets, listens on port 8080, and rejects peers outside localhost, `192.168.1.0/24`, and Tailscale's `100.64.0.0/10` range.
 
-The app runs unprivileged as `x`. Metrics are read through Python/psutil and the Pi thermal sensor. Service inspection uses a fixed `systemctl show` invocation; Tailscale IP discovery uses `tailscale ip -4`. Privileged operations can only invoke four root-owned helper scripts through narrowly scoped sudoers rules. The Access panel is deliberately a placeholder for a future, separately designed SQLite trusted-device subsystem.
+The app runs unprivileged as `x`. Metrics are read through Python/psutil and the Pi thermal sensor. Service inspection uses fixed commands. The Access panel is the only web administration surface for the shared trusted-device database; it remains inside the existing LAN/Tailscale boundary.
 
 ## Install on Raspberry Pi OS
 
@@ -45,6 +45,20 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now pi-control-dashboard.service
 sudo systemctl status pi-control-dashboard.service
 ```
+
+Provision the shared database without world access. The included tmpfiles definition assumes the services run as `x`; if they use dedicated accounts, add each to the `aryehlab` group first.
+
+```bash
+sudo groupadd -f aryehlab
+sudo usermod -aG aryehlab x
+sudo install -o root -g root -m 0644 install/aryehlab-auth.tmpfiles /etc/tmpfiles.d/aryehlab-auth.conf
+sudo systemd-tmpfiles --create /etc/tmpfiles.d/aryehlab-auth.conf
+sudo chown x:aryehlab /var/lib/aryehlab/auth.db
+sudo chmod 2770 /var/lib/aryehlab
+sudo chmod 0660 /var/lib/aryehlab/auth.db
+```
+
+Terminal recovery commands are available through `.venv/bin/python auth_admin.py`: `list-devices`, `revoke ID`, `revoke-all --yes`, `list-pending`, and `delete-pending ID`.
 
 After updates, use `sudo systemctl restart pi-control-dashboard.service`. Logs are available with `journalctl -u pi-control-dashboard.service -n 100 --no-pager`.
 
