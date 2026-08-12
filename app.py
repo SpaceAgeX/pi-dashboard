@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from dashboard.network import get_network_status
 from dashboard.security import LocalNetworkMiddleware
 from dashboard.services import get_services, restart_service
+from dashboard.storage import get_storage_status
 from dashboard.system import get_system_status, request_power_action
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -55,6 +56,11 @@ async def services_status() -> dict[str, object]:
     return {"services": get_services()}
 
 
+@app.get("/api/storage")
+async def storage_status() -> dict[str, object]:
+    return get_storage_status()
+
+
 @app.post("/api/services/{service_id}/restart")
 async def service_restart(service_id: str) -> JSONResponse:
     result, status_code = restart_service(service_id)
@@ -65,4 +71,3 @@ async def service_restart(service_id: str) -> JSONResponse:
 async def power_action(action: str) -> JSONResponse:
     result, status_code = request_power_action(action)
     return JSONResponse(status_code=status_code, content=result)
-

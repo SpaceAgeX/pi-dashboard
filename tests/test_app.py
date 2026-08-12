@@ -31,7 +31,7 @@ def test_external_peer_is_rejected() -> None:
 
 
 def test_status_routes_and_static_assets() -> None:
-    for path in ("/api/system", "/api/network", "/api/services"):
+    for path in ("/api/system", "/api/network", "/api/services", "/api/storage"):
         response = request("GET", path)
         assert response.status_code == 200
         assert response.headers["content-type"].startswith("application/json")
@@ -52,4 +52,3 @@ def test_restart_uses_fixed_command() -> None:
         response = request("POST", "/api/services/aryehlab/restart")
     assert response.status_code == 200
     assert run.call_args.args[0] == ["/usr/bin/sudo", "-n", "/usr/local/sbin/pi-dashboard-restart-aryehlab"]
-

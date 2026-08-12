@@ -1,6 +1,6 @@
 # PI-4 Control
 
-A private, dark-mode management dashboard for a Raspberry Pi 4. Version 1 provides system and network monitoring, fixed systemd service status/restarts, and guarded reboot/shutdown controls. It uses FastAPI and plain browser assets, listens on port 8080, and rejects peers outside localhost, `192.168.1.0/24`, and Tailscale's `100.64.0.0/10` range.
+A private, dark-mode management dashboard for a Raspberry Pi 4. Version 1 provides detailed system, network, storage, and service monitoring; fixed systemd service restarts; and guarded reboot/shutdown controls. It uses FastAPI and plain browser assets, listens on port 8080, and rejects peers outside localhost, `192.168.1.0/24`, and Tailscale's `100.64.0.0/10` range.
 
 The app runs unprivileged as `x`. Metrics are read through Python/psutil and the Pi thermal sensor. Service inspection uses a fixed `systemctl show` invocation; Tailscale IP discovery uses `tailscale ip -4`. Privileged operations can only invoke four root-owned helper scripts through narrowly scoped sudoers rules. The Access panel is deliberately a placeholder for a future, separately designed SQLite trusted-device subsystem.
 
@@ -60,6 +60,7 @@ Test JSON endpoints locally:
 curl http://127.0.0.1:8080/api/system
 curl http://127.0.0.1:8080/api/network
 curl http://127.0.0.1:8080/api/services
+curl http://127.0.0.1:8080/api/storage
 ```
 
 For development, run `.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8080`. Run automated checks with `.venv/bin/pip install pytest httpx` followed by `.venv/bin/pytest`.
@@ -75,5 +76,4 @@ For development, run `.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8080`. Run
 
 ## Repository layout
 
-`app.py` owns HTTP routing; `dashboard/` separates system, network, service, and access-control logic; `static/` is the framework-free frontend; `install/` contains deployable root helper, sudoers, and systemd templates; `tests/` checks API behavior and the security boundary.
-
+`app.py` owns HTTP routing; `dashboard/` separates system, network, storage, service, and access-control logic; `static/` is the framework-free multi-view frontend with in-memory history charts; `install/` contains deployable root helper, sudoers, and systemd templates; `tests/` checks API behavior and the security boundary.
