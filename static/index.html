@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0f17">
+  <title>PI-4 Control</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header><div><span class="eyebrow">RASPBERRY PI 4</span><h1>PI-4 Control</h1></div><div id="connection" class="connection">Connecting…</div></header>
+  <main>
+    <section class="card system"><div class="heading"><h2>System</h2><span class="icon">◫</span></div><div id="system-grid" class="metrics loading">Loading system metrics…</div></section>
+    <section class="card network"><div class="heading"><h2>Network</h2><span class="icon">⌁</span></div><div id="network-list" class="rows loading">Loading network status…</div></section>
+    <section class="card services"><div class="heading"><h2>Services</h2><span class="icon">⚙</span></div><div id="service-list" class="rows loading">Loading services…</div></section>
+    <section class="card access"><div class="heading"><h2>Access</h2><span class="soon">V2</span></div><div class="placeholder"><div><strong>Pending Devices</strong><span>Coming Soon</span></div><div><strong>Trusted Devices</strong><span>Coming Soon</span></div></div><p class="muted">Device approval and project access management will live here.</p></section>
+    <section class="card power"><div class="heading"><h2>Power</h2><span class="icon">⏻</span></div><p class="muted">Safely restart or power down this Raspberry Pi.</p><div class="power-actions"><button id="reboot" class="button secondary">Reboot PI-4</button><button id="shutdown" class="button danger">Shut Down PI-4</button></div></section>
+  </main>
+  <div id="modal" class="modal" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="dialog-actions"><button id="cancel" class="button ghost">Cancel</button><button id="confirm" class="button danger"></button></div></div></div>
+  <div id="takeover" class="takeover" hidden><div class="power-symbol">⏻</div><h1 id="takeover-title"></h1><p id="takeover-copy"></p></div>
+  <div id="toast" class="toast" hidden></div>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
+

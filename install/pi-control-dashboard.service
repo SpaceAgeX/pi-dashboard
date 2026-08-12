@@ -1,0 +1,21 @@
+[Unit]
+Description=PI-4 Control Dashboard
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=x
+Group=x
+WorkingDirectory=/home/x/pi-dashboard
+ExecStart=/home/x/pi-dashboard/.venv/bin/uvicorn app:app --host 0.0.0.0 --port 8080
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=/home/x/pi-dashboard
+
+[Install]
+WantedBy=multi-user.target

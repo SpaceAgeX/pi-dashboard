@@ -1,0 +1,6 @@
+# Install as /etc/sudoers.d/pi-dashboard with mode 0440.
+# The command paths must exactly match those invoked by the application.
+x ALL=(root) NOPASSWD: /usr/local/sbin/pi-dashboard-shutdown
+x ALL=(root) NOPASSWD: /usr/local/sbin/pi-dashboard-reboot
+x ALL=(root) NOPASSWD: /usr/local/sbin/pi-dashboard-restart-aryehlab
+x ALL=(root) NOPASSWD: /usr/local/sbin/pi-dashboard-restart-camera
