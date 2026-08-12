@@ -3,23 +3,57 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b0f17">
+  <meta name="theme-color" content="#090d14">
   <title>PI-4 Control</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header><div><span class="eyebrow">RASPBERRY PI 4</span><h1>PI-4 Control</h1></div><div id="connection" class="connection">Connecting…</div></header>
-  <main>
-    <section class="card system"><div class="heading"><h2>System</h2><span class="icon">◫</span></div><div id="system-grid" class="metrics loading">Loading system metrics…</div></section>
-    <section class="card network"><div class="heading"><h2>Network</h2><span class="icon">⌁</span></div><div id="network-list" class="rows loading">Loading network status…</div></section>
-    <section class="card services"><div class="heading"><h2>Services</h2><span class="icon">⚙</span></div><div id="service-list" class="rows loading">Loading services…</div></section>
-    <section class="card access"><div class="heading"><h2>Access</h2><span class="soon">V2</span></div><div class="placeholder"><div><strong>Pending Devices</strong><span>Coming Soon</span></div><div><strong>Trusted Devices</strong><span>Coming Soon</span></div></div><p class="muted">Device approval and project access management will live here.</p></section>
-    <section class="card power"><div class="heading"><h2>Power</h2><span class="icon">⏻</span></div><p class="muted">Safely restart or power down this Raspberry Pi.</p><div class="power-actions"><button id="reboot" class="button secondary">Reboot PI-4</button><button id="shutdown" class="button danger">Shut Down PI-4</button></div></section>
-  </main>
+  <aside class="sidebar" aria-label="Dashboard navigation">
+    <a class="brand" href="#top" aria-label="PI-4 Control home">P4</a>
+    <nav>
+      <a class="nav-item active" href="#system" aria-label="System" title="System">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9zM9 1v3m6-3v3M9 20v3m6-3v3M1 9h3m-3 6h3m16-6h3m-3 6h3"/></svg>
+        <span>System</span>
+      </a>
+      <a class="nav-item" href="#network" aria-label="Network" title="Network">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.6a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01M2 9a14.5 14.5 0 0 1 20 0"/></svg>
+        <span>Network</span>
+      </a>
+      <a class="nav-item" href="#services" aria-label="Services" title="Services">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 8.94 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.57 15 1.7 1.7 0 0 0 3 14H3v-4h.08A1.7 1.7 0 0 0 4.6 8.94a1.7 1.7 0 0 0-.34-1.88L4.2 7l2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.57 1.7 1.7 0 0 0 10 3V3h4v.08A1.7 1.7 0 0 0 15.06 4.6a1.7 1.7 0 0 0 1.88-.34L17 4.2 19.83 7l-.06.06A1.7 1.7 0 0 0 19.43 9c.13.48.5.86 1 1H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+        <span>Services</span>
+      </a>
+      <a class="nav-item" href="#access" aria-label="Access" title="Access">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M19 8v6m3-3h-6"/></svg>
+        <span>Access</span>
+      </a>
+    </nav>
+    <div class="power-controls" aria-label="Power controls">
+      <button id="reboot" class="rail-button" title="Reboot PI-4" aria-label="Reboot PI-4">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg><span>Reboot</span>
+      </button>
+      <button id="shutdown" class="rail-button shutdown" title="Shut Down PI-4" aria-label="Shut Down PI-4">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.4 6.6a9 9 0 1 1-12.8 0M12 2v10"/></svg><span>Power</span>
+      </button>
+    </div>
+  </aside>
+
+  <div class="workspace" id="top">
+    <header>
+      <div><span class="eyebrow">RASPBERRY PI 4</span><h1>PI-4 Control</h1></div>
+      <div id="connection" class="connection">Connecting...</div>
+    </header>
+    <main>
+      <section class="card system" id="system"><div class="heading"><h2>System</h2><span class="section-mark">01</span></div><div id="system-grid" class="metrics loading">Loading system metrics...</div></section>
+      <section class="card network" id="network"><div class="heading"><h2>Network</h2><span class="section-mark">02</span></div><div id="network-list" class="rows loading">Loading network status...</div></section>
+      <section class="card services" id="services"><div class="heading"><h2>Services</h2><span class="section-mark">03</span></div><div id="service-list" class="rows loading">Loading services...</div></section>
+      <section class="card access" id="access"><div class="heading"><h2>Access</h2><span class="soon">V2</span></div><div class="placeholder"><div><strong>Pending Devices</strong><span>Coming Soon</span></div><div><strong>Trusted Devices</strong><span>Coming Soon</span></div></div><p class="muted">Device approval and project access management will live here.</p></section>
+    </main>
+  </div>
+
   <div id="modal" class="modal" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title"></h2><p id="dialog-copy"></p><div class="dialog-actions"><button id="cancel" class="button ghost">Cancel</button><button id="confirm" class="button danger"></button></div></div></div>
-  <div id="takeover" class="takeover" hidden><div class="power-symbol">⏻</div><h1 id="takeover-title"></h1><p id="takeover-copy"></p></div>
+  <div id="takeover" class="takeover" hidden><div class="power-symbol">&#x23FB;</div><h1 id="takeover-title"></h1><p id="takeover-copy"></p></div>
   <div id="toast" class="toast" hidden></div>
   <script src="/static/app.js" defer></script>
 </body>
 </html>
-
